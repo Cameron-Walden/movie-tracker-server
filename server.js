@@ -15,17 +15,46 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 mongoose.connect(process.env.DB_URL);
 
-mongoose.connection.on("error", console.error.bind(console, "connection error:"));
+mongoose.connection.on(
+  "error",
+  console.error.bind(console, "connection error:")
+);
 mongoose.connection.once("open", () => console.log("Mongoose is connected"));
 
-app.get('/movies', async (req, res) => {
+const Movie = require("./models/movieSchema");
+
+app.get("/movies", async (req, res) => {
   try {
-    const cityName = req.query.title;
-    const movieAPI = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${cityName}`;
-    const movieResults = await axios.get(movieAPI)
-    res.send(movieResults.data)
+    const title = req.query.title;
+    const movieAPI = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${title}`;
+    const movieResults = await axios.get(movieAPI);
+    res.send(movieResults.data);
   } catch (error) {
-    res.status(500).send(error)
+    res.status(500).send(error);
+  }
+});
+
+app.post("/saved", async (req, res) => {
+  try {
+    const movieInfo = req.body;
+    const movie = await Movie.create({
+      title: movieInfo.title,
+      description: movieInfo.description,
+    });
+    res.status(201).send(movie);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.get("/saved", async (req, res) => {
+  try {
+    let movieObj = {};
+    if (req.query.title) movieObj.title = req.query.title;
+    const savedMovies = await Movie.find({});
+    res.status(200).json(savedMovies);
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 
