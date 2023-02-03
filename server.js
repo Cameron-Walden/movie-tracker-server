@@ -64,4 +64,14 @@ app.delete('/reviews/:id', async (req, res) => {
   }
 });
 
+app.put('/reviews/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const updateReview = await Movie.findByIdAndUpdate(id, req.body, { new: true, overwrite: true });
+    res.status(201).send(updateReview)
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 app.listen(PORT, () => console.log(`listening on ${PORT}🍿`));
