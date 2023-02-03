@@ -54,4 +54,14 @@ app.post("/reviews", async (req, res) => {
   }
 });
 
+app.delete('/reviews/:id', async (req, res) => {
+  const id = req.params.id;
+  try{
+    await Movie.findByIdAndDelete(id)
+    res.status(201).send('reviewed movie deleted')
+  } catch (error){
+    res.status(500).send(error);
+  }
+});
+
 app.listen(PORT, () => console.log(`listening on ${PORT}🍿`));
