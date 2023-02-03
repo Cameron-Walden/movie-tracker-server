@@ -34,25 +34,21 @@ app.get("/movies", async (req, res) => {
   }
 });
 
-app.post("/saved", async (req, res) => {
-  try {
-    const movieInfo = req.body;
-    const movie = await Movie.create({
-      title: movieInfo.title,
-      description: movieInfo.description,
-    });
-    res.status(201).send(movie);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-app.get("/saved", async (req, res) => {
+app.get("/reviews", async (req, res) => {
   try {
     let movieObj = {};
     if (req.query.title) movieObj.title = req.query.title;
     const savedMovies = await Movie.find({});
     res.status(200).json(savedMovies);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.post("/reviews", async (req, res) => {
+  try {
+    const movie = await Movie.create(req.body)
+    res.status(201).send(movie);
   } catch (error) {
     res.status(500).send(error);
   }
