@@ -22,6 +22,7 @@ mongoose.connection.on(
 mongoose.connection.once("open", () => console.log("Mongoose is connected"));
 
 const Movie = require("./models/movieSchema");
+const Watchlist = require("./models/watchlistSchema");
 
 app.get("/movies", async (req, res) => {
   try {
@@ -47,28 +48,61 @@ app.get("/reviews", async (req, res) => {
 
 app.post("/reviews", async (req, res) => {
   try {
-    const movie = await Movie.create(req.body)
+    const movie = await Movie.create(req.body);
     res.status(201).send(movie);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-app.delete('/reviews/:id', async (req, res) => {
+app.delete("/reviews/:id", async (req, res) => {
   const id = req.params.id;
-  try{
-    await Movie.findByIdAndDelete(id)
-    res.status(201).send('reviewed movie deleted')
-  } catch (error){
+  try {
+    await Movie.findByIdAndDelete(id);
+    res.status(201).send("reviewed movie deleted");
+  } catch (error) {
     res.status(500).send(error);
   }
 });
 
-app.put('/reviews/:id', async (req, res) => {
+app.put("/reviews/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const updateReview = await Movie.findByIdAndUpdate(id, req.body, { new: true, overwrite: true });
-    res.status(201).send(updateReview)
+    const updateReview = await Movie.findByIdAndUpdate(id, req.body, {
+      new: true,
+      overwrite: true,
+    });
+    res.status(201).send(updateReview);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.get("/watchlist", async (req, res) => {
+  try {
+    let watchlistObj = {};
+    if (req.query.title) watchlistObj.title = req.query.title;
+    const watchlist = await Watchlist.find({});
+    res.status(200).json(watchlist);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.post("/watchlist", async (req, res) => {
+  try {
+    const movie = await Watchlist.create(req.body);
+    res.status(201).send(movie);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.delete("/watchlist/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    await Watchlist.findByIdAndDelete(id);
+    res.status(201).send("removed from watchlist");
   } catch (error) {
     res.status(500).send(error);
   }
