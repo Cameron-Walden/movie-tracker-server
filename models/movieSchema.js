@@ -8,6 +8,7 @@ const movieSchema = new Schema({
     user_review: { type: String },
     user_rating: { type: Number },
     date_watched: { type: Date },
+    release_date: {type: String},
     liked: { type: Boolean }
 });
 
