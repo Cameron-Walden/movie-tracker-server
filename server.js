@@ -21,7 +21,7 @@ mongoose.connection.on(
 );
 mongoose.connection.once("open", () => console.log("Mongoose is connected"));
 
-const Movie = require("./models/movieSchema");
+const SavedMovie = require("./models/savedMovieSchema");
 const Watchlist = require("./models/watchlistSchema");
 
 app.get("/movies", async (req, res) => {
@@ -39,7 +39,7 @@ app.get("/reviews", async (req, res) => {
   try {
     let movieObj = {};
     if (req.query.title) movieObj.title = req.query.title;
-    const savedMovies = await Movie.find({});
+    const savedMovies = await SavedMovie.find({});
     res.status(200).json(savedMovies);
   } catch (error) {
     res.status(500).send(error);
@@ -48,7 +48,7 @@ app.get("/reviews", async (req, res) => {
 
 app.post("/reviews", async (req, res) => {
   try {
-    const movie = await Movie.create(req.body);
+    const movie = await SavedMovie.create(req.body);
     res.status(201).send(movie);
   } catch (error) {
     res.status(500).send(error);
@@ -58,7 +58,7 @@ app.post("/reviews", async (req, res) => {
 app.delete("/reviews/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    await Movie.findByIdAndDelete(id);
+    await SavedMovie.findByIdAndDelete(id);
     res.status(201).send("reviewed movie deleted");
   } catch (error) {
     res.status(500).send(error);
@@ -68,7 +68,7 @@ app.delete("/reviews/:id", async (req, res) => {
 app.put("/reviews/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const updateReview = await Movie.findByIdAndUpdate(id, req.body, {
+    const updateReview = await SavedMovie.findByIdAndUpdate(id, req.body, {
       new: true,
       overwrite: true,
     });

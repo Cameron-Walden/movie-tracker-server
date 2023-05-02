@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const movieSchema = new Schema({
+const savedMovieSchema = new Schema({
     title: { type: String },
     description: { type: String },
     poster: { type: String },
@@ -9,9 +9,10 @@ const movieSchema = new Schema({
     user_rating: { type: Number },
     date_watched: { type: Date },
     release_date: {type: String},
+    tmdb_id: {type: Number},
     liked: { type: Boolean }
 });
 
-const MovieModel = mongoose.model('Movie', movieSchema);
+const SavedMovieModel = mongoose.model('SavedMovie', savedMovieSchema);
 
-module.exports = MovieModel;
+module.exports = SavedMovieModel;
