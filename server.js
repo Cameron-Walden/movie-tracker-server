@@ -22,7 +22,7 @@ mongoose.connection.on(
 );
 mongoose.connection.once("open", () => console.log("Mongoose is connected"));
 
-const SavedMovie = require("./models/savedMovieSchema");
+const TrackedMovie = require("./models/trackedMovieSchema");
 const Watchlist = require("./models/watchlistSchema");
 
 app.get("/movies", async (req, res) => {
@@ -36,40 +36,40 @@ app.get("/movies", async (req, res) => {
   }
 });
 
-app.get("/reviews", async (req, res) => {
+app.get("/tracked", async (req, res) => {
   try {
     let movieObj = {};
     if (req.query.title) movieObj.title = req.query.title;
-    const savedMovies = await SavedMovie.find({});
+    const savedMovies = await TrackedMovie.find({});
     res.status(200).json(savedMovies);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-app.post("/reviews", async (req, res) => {
+app.post("/tracked", async (req, res) => {
   try {
-    const movie = await SavedMovie.create(req.body);
+    const movie = await TrackedMovie.create(req.body);
     res.status(201).send(movie);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-app.delete("/reviews/:id", async (req, res) => {
+app.delete("/tracked/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    await SavedMovie.findByIdAndDelete(id);
+    await TrackedMovie.findByIdAndDelete(id);
     res.status(201).send("reviewed movie deleted");
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-app.put("/reviews/:id", async (req, res) => {
+app.put("/tracked/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const updateReview = await SavedMovie.findByIdAndUpdate(id, req.body, {
+    const updateReview = await TrackedMovie.findByIdAndUpdate(id, req.body, {
       new: true,
       overwrite: true,
     });
