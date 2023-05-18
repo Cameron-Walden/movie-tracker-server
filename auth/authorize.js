@@ -5,22 +5,21 @@ function verifyUser(request, response, next) {
   function valid(err, user) {
     if (err) {
       console.error("JWT verification error:", err);
-      return next(new Error("Not Authorized in verified"));
+      return next(new Error("Not Authorized"));
     }
     request.user = user;
     next();
   }
   try {
-    const authHeader = request.headers.authorization
+    const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       throw new Error("Invalid authorization header");
     }
     const token = authHeader.split(" ")[1];
-    console.log(token, "token verify user");
     jwt.verify(token, getKey, {}, valid);
   } catch (error) {
     console.error("JWT verification error:", error);
-    next("Not Authorized in next valid");
+    next("Not Authorized");
   }
 }
 
@@ -28,15 +27,15 @@ const client = jwksClient({
   jwksUri: process.env.JWKS_URI,
 });
 
-function getKey(header, callback) {
+const getKey = (header, callback) => {
   client.getSigningKey(header.kid, function (err, key) {
     if (err) {
       console.error("Key retrieval error:", err);
       return callback(err);
     }
-    const signinKey = key.publicKey || key.rsaPublicKey;
-    callback(null, signinKey);
+    const signingKey = key.publicKey || key.rsaPublicKey;
+    callback(null, signingKey);
   });
-}
+};
 
 module.exports = verifyUser;
