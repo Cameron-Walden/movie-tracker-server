@@ -6,10 +6,10 @@ const cors = require("cors");
 const axios = require("axios");
 const app = express();
 const PORT = 3001;
-const verifyUser = require('./auth/authorize')
+const verifyUser = require("./auth/authorize");
 
 app.use(cors());
-app.use(verifyUser)
+app.use(verifyUser);
 app.use(express.json());
 
 const mongoose = require("mongoose");
@@ -24,6 +24,7 @@ mongoose.connection.once("open", () => console.log("Mongoose is connected"));
 
 const TrackedMovie = require("./models/trackedMovieSchema");
 const Watchlist = require("./models/watchlistSchema");
+const User = require("./models/userSchema");
 
 app.get("/movies", async (req, res) => {
   try {
@@ -104,6 +105,17 @@ app.delete("/watchlist/:id", async (req, res) => {
   try {
     await Watchlist.findByIdAndDelete(id);
     res.status(201).send("removed from watchlist");
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.post("/user", async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const newUser = new User({ name, email, favoriteFilms: [] });
+    await newUser.save();
+    res.status(200).json({ message: "User data stored successfully" });
   } catch (error) {
     res.status(500).send(error);
   }
