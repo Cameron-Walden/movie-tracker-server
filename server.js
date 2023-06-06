@@ -112,8 +112,8 @@ app.delete("/watchlist/:id", async (req, res) => {
 
 app.post("/user", async (req, res) => {
   try {
-    const { name, email } = req.body;
-    const newUser = new User({ name, email, favoriteFilms: [] });
+    const { name, email, avatar } = req.body;
+    const newUser = new User({ name, email, avatar, favoriteFilms: [] });
     await newUser.save();
     res.status(200).json({ message: "User data stored successfully" });
   } catch (error) {
