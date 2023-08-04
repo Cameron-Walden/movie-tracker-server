@@ -24,7 +24,7 @@ mongoose.connection.once("open", () => console.log("Mongoose is connected"));
 
 const TrackedMovie = require("./models/trackedMovieSchema");
 const Watchlist = require("./models/watchlistSchema");
-const User = require("./models/userSchema");
+const TopFive = require("./models/topFiveSchema");
 
 app.get("/movies", async (req, res) => {
   try {
@@ -110,13 +110,36 @@ app.delete("/watchlist/:id", async (req, res) => {
   }
 });
 
-app.post("/user", async (req, res) => {
+// app.post("/topFive", async (req, res) => {
+//   try {
+//     console.log(req.body, 'req.body')
+//     const { label, poster_path, id } = req.body;
+//     const movieData = { label, poster_path, id };
+//     console.log(movieData, 'movieData')
+//     const movie = await TopFive.create(movieData);
+//     console.log(movie, 'movie')
+//     res.status(201).send(movie);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
+
+app.post("/topFive", async (req, res) => {
   try {
-    const { name, email, avatar } = req.body;
-    const newUser = new User({ name, email, avatar, favoriteFilms: [] });
-    await newUser.save();
-    res.status(200).json({ message: "User data stored successfully" });
+    const favoriteFilms = req.body.favoriteFilms;
+    const createdMovies = [];
+
+    for (const film of favoriteFilms) {
+      const { label, poster_path, id } = film;
+      const movieData = { label, poster_path, id };
+
+      const movie = await TopFive.create(movieData);
+      createdMovies.push(movie);
+    }
+
+    res.status(201).send(createdMovies);
   } catch (error) {
+    console.error(error);
     res.status(500).send(error);
   }
 });
