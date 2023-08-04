@@ -110,20 +110,6 @@ app.delete("/watchlist/:id", async (req, res) => {
   }
 });
 
-// app.post("/topFive", async (req, res) => {
-//   try {
-//     console.log(req.body, 'req.body')
-//     const { label, poster_path, id } = req.body;
-//     const movieData = { label, poster_path, id };
-//     console.log(movieData, 'movieData')
-//     const movie = await TopFive.create(movieData);
-//     console.log(movie, 'movie')
-//     res.status(201).send(movie);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
-
 app.post("/topFive", async (req, res) => {
   try {
     const favoriteFilms = req.body.favoriteFilms;
