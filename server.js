@@ -25,6 +25,7 @@ mongoose.connection.once("open", () => console.log("Mongoose is connected"));
 const TrackedMovie = require("./models/trackedMovieSchema");
 const Watchlist = require("./models/watchlistSchema");
 const TopFive = require("./models/topFiveSchema");
+const TopFiveModel = require("./models/topFiveSchema");
 
 app.get("/movies", async (req, res) => {
   try {
@@ -110,19 +111,31 @@ app.delete("/watchlist/:id", async (req, res) => {
   }
 });
 
+app.get("/topFive", async (req, res) => {
+  try {
+    const userTopFive = await TopFiveModel.find({});
+    res.status(200).send(userTopFive);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.post("/topFive", async (req, res) => {
   try {
     const favoriteFilms = req.body.favoriteFilms;
     const createdMovies = [];
+    console.log(createdMovies, 'createdMovies before')
 
     for (const film of favoriteFilms) {
       const { label, poster_path, id } = film;
+      console.log(film, 'film')
       const movieData = { label, poster_path, id };
+      console.log(movieData, 'movieData')
 
       const movie = await TopFive.create(movieData);
       createdMovies.push(movie);
     }
-
+    console.log(createdMovies, 'cm after')
     res.status(201).send(createdMovies);
   } catch (error) {
     console.error(error);
