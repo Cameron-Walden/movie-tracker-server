@@ -116,7 +116,7 @@ app.get("/topFive", async (req, res) => {
     const userTopFive = await TopFiveModel.find({});
     res.status(200).send(userTopFive);
   } catch (error) {
-    console.log(error);
+    res.status(500).send(error);
   }
 });
 
@@ -124,23 +124,56 @@ app.post("/topFive", async (req, res) => {
   try {
     const favoriteFilms = req.body.favoriteFilms;
     const createdMovies = [];
-    console.log(createdMovies, 'createdMovies before')
 
     for (const film of favoriteFilms) {
       const { label, poster_path, id } = film;
-      console.log(film, 'film')
       const movieData = { label, poster_path, id };
-      console.log(movieData, 'movieData')
 
-      const movie = await TopFive.create(movieData);
+      let movie = await TopFive.findOne({ id: movieData.id });
+
+      if (!movie) {
+        movie = await TopFive.create(movieData);
+      }
+
       createdMovies.push(movie);
     }
-    console.log(createdMovies, 'cm after')
+
     res.status(201).send(createdMovies);
   } catch (error) {
-    console.error(error);
     res.status(500).send(error);
   }
 });
+
+app.put(`/topFive`, async (req, res) => {
+  const favoriteFilms = req.body.favoriteFilms;
+
+  try {
+    await TopFiveModel.deleteMany({});
+
+    const updatedTopFive = await TopFiveModel.insertMany(favoriteFilms);
+
+    res.status(201).send(updatedTopFive);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.put(`/topFive/:id`, async (req, res) => {
+  const id = req.params.id;
+  const { label, poster_path } = req.body;
+
+  try {
+    const updateTopFive = await TopFiveModel.findByIdAndUpdate(
+      id,
+      { $set: { label, poster_path } },
+      { new: true }
+    );
+
+    res.status(201).send(updateTopFive);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 
 app.listen(PORT, () => console.log(`listening on ${PORT}🍿`));
