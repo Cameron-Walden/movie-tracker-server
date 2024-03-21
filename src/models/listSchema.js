@@ -6,10 +6,9 @@ const listSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String },
   movies: [movieSchema],
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  user: { type: String, required: true },
 });
 
 const listModel = mongoose.model("Lists", listSchema);
 
 module.exports = listModel;
-
