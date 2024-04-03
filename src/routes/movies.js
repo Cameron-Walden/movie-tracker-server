@@ -17,4 +17,16 @@ router.get("/movies", async (req, res) => {
   }
 });
 
+router.get("/movies/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const movieAPI = `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.MOVIE_API_KEY}`;
+    const movieResults = await axios.get(movieAPI);
+
+    res.send(movieResults.data);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;
