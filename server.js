@@ -17,16 +17,15 @@ const connectDB = require("./src/db");
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
-app.use(verifyUser);
 app.use(express.json());
 
 connectDB();
 
-app.use(movieRouter)
-app.use(trackedRouter)
-app.use(watchlistRouter)
-app.use(topFiveRouter)
-app.use(listRouter)
+app.use(movieRouter);
+app.use("/tracked", verifyUser, trackedRouter);
+app.use("/watchlist", verifyUser, watchlistRouter);
+app.use("/topFive", verifyUser, topFiveRouter);
+app.use("/lists", verifyUser, listRouter);
 
 app.use("*", notFoundHandler);
 app.use(errorHandler);
