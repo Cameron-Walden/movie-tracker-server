@@ -5,7 +5,7 @@ const express = require("express");
 const router = express.Router();
 const TopFive = require("../models/topFiveSchema");
 
-router.get("/topFive", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const userTopFive = await TopFive.find({});
     res.status(200).send(userTopFive);
@@ -14,7 +14,7 @@ router.get("/topFive", async (req, res) => {
   }
 });
 
-router.post("/topFive", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const favoriteFilms = req.body.favoriteFilms;
     const createdMovies = [];
@@ -38,7 +38,7 @@ router.post("/topFive", async (req, res) => {
   }
 });
 
-router.put(`/topFive`, async (req, res) => {
+router.put(`/`, async (req, res) => {
   const favoriteFilms = req.body.favoriteFilms;
 
   try {
@@ -52,7 +52,7 @@ router.put(`/topFive`, async (req, res) => {
   }
 });
 
-router.put(`/topFive/:id`, async (req, res) => {
+router.put(`/:id`, async (req, res) => {
   const id = req.params.id;
   const { label, poster_path } = req.body;
 

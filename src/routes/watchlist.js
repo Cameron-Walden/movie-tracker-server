@@ -6,7 +6,7 @@ const router = express.Router();
 
 const Watchlist = require("../models/watchlistSchema");
 
-router.get("/watchlist", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     let watchlistObj = {};
     if (req.query.title) watchlistObj.title = req.query.title;
@@ -17,7 +17,7 @@ router.get("/watchlist", async (req, res) => {
   }
 });
 
-router.post("/watchlist", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const movie = await Watchlist.create(req.body);
     res.status(201).send(movie);
@@ -26,7 +26,7 @@ router.post("/watchlist", async (req, res) => {
   }
 });
 
-router.delete("/watchlist/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     await Watchlist.findByIdAndDelete(id);
