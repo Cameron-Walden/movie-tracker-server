@@ -5,7 +5,7 @@ const express = require("express");
 const router = express.Router();
 const List = require("../models/listSchema");
 
-router.get("/lists", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const lists = await List.find({});
     res.status(200).send(lists);
@@ -14,7 +14,7 @@ router.get("/lists", async (req, res) => {
   }
 });
 
-router.post("/lists", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
     const newList = new List(req.body);
     const result = await newList.save();

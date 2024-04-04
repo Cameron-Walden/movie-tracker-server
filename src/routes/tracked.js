@@ -6,7 +6,7 @@ const router = express.Router();
 
 const TrackedMovie = require("../models/trackedMovieSchema");
 
-router.get("/tracked", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     let movieObj = {};
     if (req.query.title) movieObj.title = req.query.title;
@@ -17,7 +17,7 @@ router.get("/tracked", async (req, res) => {
   }
 });
 
-router.post("/tracked", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const movie = await TrackedMovie.create(req.body);
     res.status(201).send(movie);
@@ -26,7 +26,7 @@ router.post("/tracked", async (req, res) => {
   }
 });
 
-router.delete("/tracked/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     await TrackedMovie.findByIdAndDelete(id);
@@ -36,7 +36,7 @@ router.delete("/tracked/:id", async (req, res) => {
   }
 });
 
-router.put("/tracked/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const updateReview = await TrackedMovie.findByIdAndUpdate(id, req.body, {
