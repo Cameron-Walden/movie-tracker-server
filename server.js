@@ -9,6 +9,8 @@ const trackedRouter = require("./src/routes/tracked");
 const watchlistRouter = require("./src/routes/watchlist");
 const topFiveRouter = require("./src/routes/topFive");
 const listRouter = require("./src/routes/lists");
+const genresRouter = require("./src/routes/genres");
+const discoverRouter = require("./src/routes/discover");
 const notFoundHandler = require("./src/error-handlers/404");
 const errorHandler = require("./src/error-handlers/500");
 
@@ -22,6 +24,8 @@ app.use(express.json());
 connectDB();
 
 app.use(movieRouter);
+app.use(genresRouter);
+app.use(discoverRouter);
 app.use("/tracked", verifyUser, trackedRouter);
 app.use("/watchlist", verifyUser, watchlistRouter);
 app.use("/topFive", verifyUser, topFiveRouter);
