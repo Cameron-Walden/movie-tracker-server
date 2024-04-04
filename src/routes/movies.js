@@ -28,17 +28,16 @@ router.get("/movies/:id", async (req, res) => {
   }
 });
 
-// router.get("/movies/:id/credits", async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     const credits = await axios.get(
-//       `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.MOVIE_API_KEY}`
-//     );
-//     console.log(credits.data)
-//     res.send(credits.data);
-//   } catch (e) {
-//     res.status(500).send(e);
-//   }
-// });
+router.get("/movies/:id/credits", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const credits = await axios.get(
+      `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.MOVIE_API_KEY}`
+    );
+    res.send(credits.data);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
 
 module.exports = router;
