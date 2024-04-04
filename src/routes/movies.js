@@ -40,4 +40,16 @@ router.get("/movies/:id/credits", async (req, res) => {
   }
 });
 
+router.get("/movies/:id/recommendations", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const similar = await axios.get(
+      `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${process.env.MOVIE_API_KEY}`
+    );
+    res.send(similar.data);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
+
 module.exports = router;
