@@ -17,6 +17,29 @@ router.get("/movies", async (req, res) => {
   }
 });
 
+router.get("/movies/popular", async (req, res) => {
+  try {
+    const p1Res = await axios.get(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.MOVIE_API_KEY}&page=1`
+    );
+    const p2Res = await axios.get(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.MOVIE_API_KEY}&page=2`
+    );
+    const p3Res = await axios.get(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.MOVIE_API_KEY}&page=3`
+    );
+
+    const results = [
+      ...p1Res.data.results,
+      ...p2Res.data.results,
+      ...p3Res.data.results,
+    ];
+    res.send(results);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 router.get("/movies/:id", async (req, res) => {
   try {
     const id = req.params.id;
