@@ -4,11 +4,21 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const TopFive = require("../models/topFiveSchema");
+const NodeCache = require("node-cache");
+const myCache = new NodeCache();
 
 router.get("/", async (req, res) => {
   try {
-    const userTopFive = await TopFive.find({});
-    res.status(200).send(userTopFive);
+    const cacheKey = "topFive";
+    const cachedData = myCache.get(cacheKey);
+
+    if (cachedData) {
+      res.send(cachedData);
+    } else {
+      const userTopFive = await TopFive.find({});
+      myCache.set(cacheKey, userTopFive, 60 * 60 * 24);
+      res.status(200).send(userTopFive);
+    }
   } catch (error) {
     res.status(500).send(error);
   }

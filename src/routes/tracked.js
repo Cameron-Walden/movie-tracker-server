@@ -3,15 +3,23 @@
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-
 const TrackedMovie = require("../models/trackedMovieSchema");
+const NodeCache = require("node-cache");
+const myCache = new NodeCache();
 
 router.get("/", async (req, res) => {
   try {
-    let movieObj = {};
-    if (req.query.title) movieObj.title = req.query.title;
-    const savedMovies = await TrackedMovie.find({});
-    res.status(200).json(savedMovies);
+    const cacheKey = "trackedMovies";
+    const cachedData = myCache.get(cacheKey);
+    if (cachedData) {
+      res.send(cachedData);
+    } else {
+      let movieObj = {};
+      if (req.query.title) movieObj.title = req.query.title;
+      const savedMovies = await TrackedMovie.find({});
+      myCache.set(cacheKey, savedMovies, 60 * 60 * 24);
+      res.status(200).json(savedMovies);
+    }
   } catch (error) {
     res.status(500).send(error);
   }
