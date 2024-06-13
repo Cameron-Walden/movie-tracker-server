@@ -26,9 +26,11 @@ router.get("/", async (req, res) => {
   }
 });
 
+
 router.post("/", async (req, res) => {
   try {
     const movie = await Watchlist.create(req.body);
+    myCache.del("watchlist"); 
     res.status(201).send(movie);
   } catch (error) {
     res.status(500).send(error);
@@ -39,6 +41,7 @@ router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     await Watchlist.findByIdAndDelete(id);
+    myCache.del("watchlist"); 
     res.status(201).send("removed from watchlist");
   } catch (error) {
     res.status(500).send(error);
