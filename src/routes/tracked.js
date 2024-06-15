@@ -28,6 +28,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const movie = await TrackedMovie.create(req.body);
+    myCache.del("trackedMovies");
     res.status(201).send(movie);
   } catch (error) {
     res.status(500).send(error);
@@ -38,6 +39,7 @@ router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     await TrackedMovie.findByIdAndDelete(id);
+    myCache.del("trackedMovies");
     res.status(201).send("reviewed movie deleted");
   } catch (error) {
     res.status(500).send(error);
@@ -51,6 +53,7 @@ router.put("/:id", async (req, res) => {
       new: true,
       overwrite: true,
     });
+    myCache.del("trackedMovies");
     res.status(201).send(updateReview);
   } catch (error) {
     res.status(500).send(error);

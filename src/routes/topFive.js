@@ -37,11 +37,10 @@ router.post("/", async (req, res) => {
 
       if (!movie) {
         movie = await TopFive.create(movieData);
+        myCache.del("topFive");
       }
-
       createdMovies.push(movie);
     }
-
     res.status(201).send(createdMovies);
   } catch (error) {
     res.status(500).send(error);
@@ -53,9 +52,8 @@ router.put(`/`, async (req, res) => {
 
   try {
     await TopFive.deleteMany({});
-
     const updatedTopFive = await TopFive.insertMany(favoriteFilms);
-
+    myCache.del("topFive");
     res.status(201).send(updatedTopFive);
   } catch (error) {
     res.status(500).send(error);
@@ -72,7 +70,7 @@ router.put(`/:id`, async (req, res) => {
       { $set: { label, poster_path } },
       { new: true }
     );
-
+    myCache.del("topFive");
     res.status(201).send(updateTopFive);
   } catch (error) {
     res.status(500).send(error);

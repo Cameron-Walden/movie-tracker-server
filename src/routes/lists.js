@@ -28,6 +28,7 @@ router.post("/", async (req, res, next) => {
   try {
     const newList = new List(req.body);
     const result = await newList.save();
+    myCache.del("lists");
     res.status(201).send(result);
   } catch (error) {
     res.status(500).send(error);
